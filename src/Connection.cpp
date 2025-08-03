@@ -1,6 +1,8 @@
 #include "Connection.h"
+#include <iostream>
 #include "pch.h"
 #include "public.h"
+using namespace std;
 
 // 初始化数据库连接
 Connection::Connection() {
