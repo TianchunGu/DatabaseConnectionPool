@@ -18,6 +18,7 @@ class ConnectionPool {
   // 单例#1 构造函数私有化
   ConnectionPool();
   // 从配置文件中加载连接信息
+ public:
   bool loadConfigFile();
 
   string _ip;                 // mysql的ip地址
@@ -31,4 +32,4 @@ class ConnectionPool {
 
   queue<Connection*> _connectionQue;  // 存储mysql连接的队列
   mutex _queueMutex;                  // 维护连接队列的线程安全互斥锁
-}
+};
