@@ -17,6 +17,8 @@ ConnectionPool::ConnectionPool() {
     _connectionCnt++;
   }
   // 启动一个新的线程,作为连接的生产者
+  // linux thread => pthread_create
+  thread produce(std::bind(&ConnectionPool::produceConnectionTask, this));
 };
 
 // 线程安全的懒汉单例函数接口
@@ -79,4 +81,23 @@ bool ConnectionPool::loadConfigFile() {
   }
   fclose(pf);
   return true;
+}
+
+// 运行在独立的线程中,专门负责产生新的连接
+void ConnectionPool::produceConnectionTask() {
+  for (;;) {
+    unique_lock<mutex> lock(_queueMutex);
+    while (!_connectionQue.empty()) {
+      _cv.wait(lock);  // 队列不空,此处生产线程进入等待状态
+    }
+    // 连接数量没有达到上限,继续创建新的连接
+    if (_connectionCnt < _maxSize) {
+      Connection* p = new Connection();
+      p->connect(_ip, _port, _username, _password, _dbname);
+      _connectionQue.push(p);
+      _connectionCnt++;
+    }
+    // 通知消费者线程,可以消费连接了
+    _cv.notify_all();
+  }
 }

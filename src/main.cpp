@@ -13,8 +13,7 @@ int main() {
   conn.connect("127.0.0.1", 3306, "gtc", "123456", "chat");
   conn.update(sql);
   */
-  ConnectionPool* cp = ConnectionPool::getConnectionPool();
-  cp->loadConfigFile();
+  
 
   return 0;
 }
