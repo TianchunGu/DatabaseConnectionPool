@@ -3,8 +3,21 @@
 #include "pch.h"
 #include "public.h"
 
-// 构造函数实现
-ConnectionPool::ConnectionPool() {};
+// 连接池的构造函数实现
+ConnectionPool::ConnectionPool() {
+  // 加载配置项
+  if (!loadConfigFile()) {
+    return;
+  }
+  // 创建初始数量的连接
+  for (int i = 0; i < _initSize; i++) {
+    Connection* p = new Connection();
+    p->connect(_ip, _port, _username, _password, _dbname);
+    _connectionQue.push(p);
+    _connectionCnt++;
+  }
+  // 启动一个新的线程,作为连接的生产者
+};
 
 // 线程安全的懒汉单例函数接口
 ConnectionPool* ConnectionPool::getConnectionPool() {
@@ -23,7 +36,7 @@ bool ConnectionPool::loadConfigFile() {
          << endl;
   } else {
     perror(("mysql.ini file failed to open " + path).c_str());
-    return false; // 添加返回值
+    return false;  // 添加返回值
   }
 
   while (!feof(pf)) {
@@ -60,6 +73,8 @@ bool ConnectionPool::loadConfigFile() {
       _maxIdleTime = atoi(value.c_str());  // 转换为整数
     } else if (key == "connectionTimeout") {
       _connectionTimeout = atoi(value.c_str());  // 转换为整数
+    } else if (key == "dbname") {                // 保存数据库名
+      _dbname = value;
     }
   }
   fclose(pf);

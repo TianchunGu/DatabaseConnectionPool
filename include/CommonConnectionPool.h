@@ -1,7 +1,9 @@
 #pragma once
+#include <atomic>
 #include <mutex>
 #include <queue>
 #include <string>
+#include <thread>
 #include "Connection.h"
 using namespace std;
 
@@ -25,6 +27,7 @@ class ConnectionPool {
   unsigned short _port;       // mysql的端口号3306
   string _username;           // mysql的登录用户名
   string _password;           // mysql的登录密码
+  string _dbname;             // mysql数据库名称
   string _initSize;           // 连接池初始连接量
   string _maxSize;            // 连接池最大连接量
   string _maxIdleTime;        // 连接池最大空闲时间
@@ -32,4 +35,5 @@ class ConnectionPool {
 
   queue<Connection*> _connectionQue;  // 存储mysql连接的队列
   mutex _queueMutex;                  // 维护连接队列的线程安全互斥锁
+  atomic_int _connectionCnt;          // 记录连接所创建的connection连接的总数量
 };
