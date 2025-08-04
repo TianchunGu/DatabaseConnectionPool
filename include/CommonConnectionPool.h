@@ -20,7 +20,7 @@ class ConnectionPool {
   static ConnectionPool* getConnectionPool();
   // 给外部提供接口,从连接池中获取一个可用空闲连接
   // 归还连接池链接,利用智能指针的析构函数
-  shared_ptr<Connection>* getConnection();
+  shared_ptr<Connection> getConnection();
 
  private:
   // 单例#1 构造函数私有化
