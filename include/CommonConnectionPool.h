@@ -31,6 +31,9 @@ class ConnectionPool {
   // 运行在独立的线程中,专门负责产生新的连接
   void produceConnectionTask();
 
+  // 启动一个新的定时线程,扫描超过maxIdleTime的空闲连接,进行连接回收
+  void scannerConnectionTask();
+
   string _ip;              // mysql的ip地址
   unsigned short _port;    // mysql的端口号3306
   string _username;        // mysql的登录用户名

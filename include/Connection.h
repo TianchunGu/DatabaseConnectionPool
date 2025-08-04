@@ -1,4 +1,5 @@
 #pragma once
+#include <ctime>
 #include <string>
 #include "mysql.h"
 using namespace std;
@@ -24,6 +25,13 @@ class Connection {
   // 查询操作 select
   MYSQL_RES* query(string sql);
 
+  // 刷新一下连接的起始的空闲时间点
+  void refreshAliveTime() { _aliveTime = clock(); }
+
+  // 返回存活时间
+  clock_t getAliveTime() { return clock() - _aliveTime; }
+
  private:
-  MYSQL* _conn;  // 表示和MySQL Server的一条连接
+  MYSQL* _conn;        // 表示和MySQL Server的一条连接
+  clock_t _aliveTime;  // 记录进入空闲状态后的起始存活时间
 };
