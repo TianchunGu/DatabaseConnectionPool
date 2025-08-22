@@ -16,14 +16,62 @@ int main() {
   */
   std::chrono::high_resolution_clock::time_point begin =
       std::chrono::high_resolution_clock::now();
-  ConnectionPool* cp = ConnectionPool::getConnectionPool();
-  for (int i = 0; i < 1000; i++) {
-    shared_ptr<Connection> sp = cp->getConnection();
-    char sql[1024] = {0};
-    sprintf(sql, "insert into user(name,age,sex) values('%s', '%d', '%s')",
-            "zhang san", 20, "male");
-    sp->update(sql);
-  }
+  // ConnectionPool* cp = ConnectionPool::getConnectionPool();
+
+  thread t1([]() {
+    for (int i = 0; i < 250; i++) {
+      Connection conn;
+      char sql[1024] = {0};
+      sprintf(sql, "insert into user(name,age,sex) values('%s', '%d', '%s')",
+              "zhang san", 20, "male");
+      conn.connect("127.0.0.1", 3306, "gtc", "123456", "chat");
+      conn.update(sql);
+    }
+  });
+
+  thread t2([]() {
+    for (int i = 0; i < 250; i++) {
+      Connection conn;
+      char sql[1024] = {0};
+      sprintf(sql, "insert into user(name,age,sex) values('%s', '%d', '%s')",
+              "zhang san", 20, "male");
+      conn.connect("127.0.0.1", 3306, "gtc", "123456", "chat");
+      conn.update(sql);
+    }
+  });
+
+  thread t3([]() {
+    for (int i = 0; i < 250; i++) {
+      Connection conn;
+      char sql[1024] = {0};
+      sprintf(sql, "insert into user(name,age,sex) values('%s', '%d', '%s')",
+              "zhang san", 20, "male");
+      conn.connect("127.0.0.1", 3306, "gtc", "123456", "chat");
+      conn.update(sql);
+    }
+  });
+  thread t4([]() {
+    for (int i = 0; i < 250; i++) {
+      Connection conn;
+      char sql[1024] = {0};
+      sprintf(sql, "insert into user(name,age,sex) values('%s', '%d', '%s')",
+              "zhang san", 20, "male");
+      conn.connect("127.0.0.1", 3306, "gtc", "123456", "chat");
+      conn.update(sql);
+    }
+  });
+  t1.join();
+  t2.join();
+  t3.join();
+  t4.join();
+
+  // for (int i = 0; i < 1000; i++) {
+  //   shared_ptr<Connection> sp = cp->getConnection();
+  //   char sql[1024] = {0};
+  //   sprintf(sql, "insert into user(name,age,sex) values('%s', '%d', '%s')",
+  //           "zhang san", 20, "male");
+  //   sp->update(sql);
+  // }
   std::chrono::high_resolution_clock::time_point end =
       std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> time_span =
