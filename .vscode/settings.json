@@ -6,6 +6,8 @@
     "atomic": "cpp",
     "condition_variable": "cpp",
     "functional": "cpp",
-    "memory": "cpp"
+    "memory": "cpp",
+    "iostream": "cpp",
+    "chrono": "cpp"
   }
 }

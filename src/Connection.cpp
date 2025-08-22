@@ -24,8 +24,9 @@ bool Connection::connect(string ip,
   MYSQL* p =
       mysql_real_connect(_conn, ip.c_str(), user.c_str(), password.c_str(),
                          dbname.c_str(), port, nullptr, 0);
-  if (p != nullptr)
-    LOG("connect successful!");
+  // 显示日志
+  // if (p != nullptr)
+  //   LOG("connect successful!");
   return p != nullptr;
 }
 
